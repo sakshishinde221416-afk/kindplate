@@ -1,0 +1,346 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Donation - KindPlate</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo-section">
+            <span class="logo">KP</span>
+            <span class="logo-text">KindPlate</span>
+        </div>
+        <div class="nav-buttons">
+            <button id="themeToggle" class="theme-toggle">🌙</button>
+            <a href="{% url 'donor_dashboard' %}" class="btn btn-secondary">Dashboard</a>
+            <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-image">
+                <div class="auth-image-overlay">
+                    <h3>Update Your Donation</h3>
+                    <p>Keep your donation information accurate and up-to-date to help receivers make informed decisions.</p>
+                </div>
+            </div>
+            
+            <div class="auth-form-container">
+                <div class="card">
+                    <div style="text-align: center; font-size: 3rem; margin-bottom: 1rem;">✏️</div>
+                    <h2>Edit Donation</h2>
+                    <p class="card-subtitle">Update your donation details</p>
+                    
+                    <form method="POST" id="donationForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="form-section">
+                            <h3 class="form-section-title">Food Details</h3>
+                            
+                            <div class="form-group">
+                                <label for="food_title">🍽️ Food Title</label>
+                                <input type="text" id="food_title" name="food_title" value="{{ donation.food_title }}" placeholder="e.g., Fresh Vegetables, Cooked Rice, Packed Meals" required minlength="3" maxlength="100">
+                                <small class="form-hint">Give a clear, descriptive title</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="category">🏷️ Food Category</label>
+                                <select id="category" name="category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="vegetarian" {% if donation.category == 'vegetarian' %}selected{% endif %}>🥗 Vegetarian</option>
+                                    <option value="vegan" {% if donation.category == 'vegan' %}selected{% endif %}>🌱 Vegan</option>
+                                    <option value="non_veg" {% if donation.category == 'non_veg' %}selected{% endif %}>🍗 Non-Vegetarian</option>
+                                    <option value="halal" {% if donation.category == 'halal' %}selected{% endif %}>☪️ Halal</option>
+                                    <option value="kosher" {% if donation.category == 'kosher' %}selected{% endif %}>✡️ Kosher</option>
+                                    <option value="gluten_free" {% if donation.category == 'gluten_free' %}selected{% endif %}>🌾 Gluten Free</option>
+                                    <option value="dairy_free" {% if donation.category == 'dairy_free' %}selected{% endif %}>🥛 Dairy Free</option>
+                                    <option value="other" {% if donation.category == 'other' %}selected{% endif %}>📦 Other</option>
+                                </select>
+                                <small class="form-hint">Help receivers find suitable food</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="description">📝 Description</label>
+                                <textarea id="description" name="description" placeholder="Describe the food items, condition, packaging, etc." required minlength="10" maxlength="500" rows="4">{{ donation.description }}</textarea>
+                                <small class="form-hint"><span id="charCount">{{ donation.description|length }}</span>/500 characters</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="food_image">📷 Food Image (Optional)</label>
+                                <div class="image-upload-container">
+                                    <input type="file" id="food_image" name="food_image" accept="image/*" style="display: none;">
+                                    <div class="image-upload-area" id="imageUploadArea">
+                                        <div class="upload-placeholder" id="uploadPlaceholder" {% if donation.food_image %}style="display: none;"{% endif %}>
+                                            <span class="upload-icon">📸</span>
+                                            <p>Click to upload or drag & drop</p>
+                                            <small>PNG, JPG, JPEG (Max 5MB)</small>
+                                        </div>
+                                        <div class="image-preview" id="imagePreview" {% if donation.food_image %}style="display: block;"{% else %}style="display: none;"{% endif %}>
+                                            <img id="previewImg" src="{% if donation.food_image %}{{ donation.food_image.url }}{% endif %}" alt="Preview">
+                                            <button type="button" class="remove-image" id="removeImage">✕</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <small class="form-hint">Leave empty to keep current image, or upload new one to replace</small>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="quantity">📊 Quantity</label>
+                                    <input type="text" id="quantity" name="quantity" value="{{ donation.quantity }}" placeholder="e.g., 5 kg, 10 servings" required>
+                                    <small class="form-hint">Approximate amount</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="expiry_date">⏰ Best Before</label>
+                                    <input type="date" id="expiry_date" name="expiry_date" value="{{ donation.expiry_date|date:'Y-m-d' }}" required>
+                                    <small class="form-hint">When should it be consumed by?</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3 class="form-section-title">Pickup Information</h3>
+                            
+                            <div class="form-group">
+                                <label for="pickup_location">📍 Pickup Location</label>
+                                <input type="text" id="pickup_location" name="pickup_location" value="{{ donation.pickup_location }}" placeholder="Enter full address or landmark" required minlength="5">
+                                <small class="form-hint">Be specific to help receivers find you easily</small>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="pickup_time_start">🕐 Pickup Start Time (Optional)</label>
+                                    <input type="time" id="pickup_time_start" name="pickup_time_start" value="{% if donation.pickup_time_start %}{{ donation.pickup_time_start|time:'H:i' }}{% endif %}">
+                                    <small class="form-hint">When can pickup begin?</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="pickup_time_end">🕐 Pickup End Time (Optional)</label>
+                                    <input type="time" id="pickup_time_end" name="pickup_time_end" value="{% if donation.pickup_time_end %}{{ donation.pickup_time_end|time:'H:i' }}{% endif %}">
+                                    <small class="form-hint">Last pickup time</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-features">
+                            <div class="form-feature">
+                                <span class="form-feature-icon">✓</span>
+                                <span>Changes saved instantly</span>
+                            </div>
+                            <div class="form-feature">
+                                <span class="form-feature-icon">✓</span>
+                                <span>Receivers notified of updates</span>
+                            </div>
+                            <div class="form-feature">
+                                <span class="form-feature-icon">✓</span>
+                                <span>Keep information accurate</span>
+                            </div>
+                            <div class="form-feature">
+                                <span class="form-feature-icon">✓</span>
+                                <span>Help more people</span>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-submit">
+                            <span class="btn-icon">💾</span>
+                            <span>Update Donation</span>
+                        </button>
+                        
+                        <a href="{% url 'donor_dashboard' %}" class="btn btn-secondary" style="width: 100%; margin-top: 1rem; text-align: center;">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>KindPlate</h3>
+                    <p>Thank you for being a donor and making a difference.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link">Facebook</a>
+                        <a href="#" class="social-link">Twitter</a>
+                        <a href="#" class="social-link">Instagram</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links-list">
+                        <li><a href="{% url 'donor_dashboard' %}">Dashboard</a></li>
+                        <li><a href="{% url 'add_donation' %}">Add Donation</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul class="footer-links-list">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Guidelines</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>support@kindplate.com</p>
+                    <p>+1 (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 KindPlate. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/theme.js' %}"></script>
+    <script>
+        // Character counter for description
+        const descriptionField = document.getElementById('description');
+        const charCount = document.getElementById('charCount');
+        
+        descriptionField.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = count;
+            
+            if (count > 450) {
+                charCount.style.color = '#ef4444';
+            } else if (count > 350) {
+                charCount.style.color = '#f59e0b';
+            } else {
+                charCount.style.color = 'var(--text-secondary)';
+            }
+        });
+        
+        // Image upload handling
+        const fileInput = document.getElementById('food_image');
+        const imageUploadArea = document.getElementById('imageUploadArea');
+        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const removeImageBtn = document.getElementById('removeImage');
+        
+        // Click to upload
+        imageUploadArea.addEventListener('click', function(e) {
+            if (!e.target.closest('.remove-image')) {
+                fileInput.click();
+            }
+        });
+        
+        // File input change
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleImageFile(file);
+            }
+        });
+        
+        // Drag and drop
+        imageUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = 'var(--primary-color)';
+            this.style.background = 'rgba(37, 99, 235, 0.05)';
+        });
+        
+        imageUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = 'var(--border-color)';
+            this.style.background = 'var(--bg-color)';
+        });
+        
+        imageUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = 'var(--border-color)';
+            this.style.background = 'var(--bg-color)';
+            
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                fileInput.files = e.dataTransfer.files;
+                handleImageFile(file);
+            } else {
+                alert('⚠️ Please upload an image file (PNG, JPG, JPEG)');
+            }
+        });
+        
+        // Handle image file
+        function handleImageFile(file) {
+            // Check file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('⚠️ Image size should be less than 5MB');
+                fileInput.value = '';
+                return;
+            }
+            
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('⚠️ Please upload an image file');
+                fileInput.value = '';
+                return;
+            }
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                uploadPlaceholder.style.display = 'none';
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Remove image
+        removeImageBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            fileInput.value = '';
+            uploadPlaceholder.style.display = 'flex';
+            imagePreview.style.display = 'none';
+            previewImg.src = '';
+        });
+        
+        // Set minimum date to today
+        const expiryDateField = document.getElementById('expiry_date');
+        const today = new Date().toISOString().split('T')[0];
+        expiryDateField.setAttribute('min', today);
+        
+        // Form validation
+        const form = document.getElementById('donationForm');
+        form.addEventListener('submit', function(e) {
+            const expiryDate = new Date(expiryDateField.value);
+            const todayDate = new Date(today);
+            
+            if (expiryDate < todayDate) {
+                e.preventDefault();
+                alert('⚠️ Expiry date cannot be in the past. Please select today or a future date.');
+                expiryDateField.focus();
+                return false;
+            }
+            
+            // Add loading state to button
+            const submitBtn = form.querySelector('.btn-submit');
+            submitBtn.innerHTML = '<span class="btn-icon">⏳</span><span>Updating Donation...</span>';
+            submitBtn.disabled = true;
+        });
+        
+        // Input animations
+        const inputs = document.querySelectorAll('input:not([type="file"]), textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

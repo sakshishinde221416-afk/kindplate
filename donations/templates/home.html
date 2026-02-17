@@ -1,0 +1,310 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KindPlate - Food Donation Platform</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo-section">
+            <span class="logo">KP</span>
+            <span class="logo-text">KindPlate</span>
+        </div>
+        <div class="nav-buttons">
+            <button id="themeToggle" class="theme-toggle">🌙</button>
+            <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Food Donation Platform</h1>
+            <p>Connect donors with those in need. Reduce food waste and fight hunger in your community through our secure, easy-to-use platform.</p>
+            <div class="hero-buttons">
+                <a href="{% url 'register' %}" class="btn btn-primary" style="font-size: 1rem; padding: 0.9rem 1.8rem;">Get Started</a>
+                <a href="#how-it-works" class="btn btn-secondary" style="font-size: 1rem; padding: 0.9rem 1.8rem;">Learn More</a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <h3>1,000+</h3>
+                    <p>Meals Donated</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>500+</h3>
+                    <p>Active Users</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>95%</h3>
+                    <p>Success Rate</p>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hero-image-placeholder"></div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="section-header">
+            <h2>Why Choose KindPlate</h2>
+            <p>A comprehensive platform designed to make food donation simple, secure, and impactful for everyone involved</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-image feature-image-1"></div>
+                <div class="feature-content">
+                    <span class="feature-badge">Connection</span>
+                    <h3>Instant Matching</h3>
+                    <p>Our smart platform instantly connects food donors with receivers in your local area, ensuring food reaches those who need it quickly and efficiently.</p>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>Real-time matching</span>
+                        </div>
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>Local focus</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-image feature-image-2"></div>
+                <div class="feature-content">
+                    <span class="feature-badge">Sustainability</span>
+                    <h3>Zero Waste Mission</h3>
+                    <p>Join the fight against food waste. Every donation prevents perfectly good food from ending up in landfills while helping families in need.</p>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>Eco-friendly</span>
+                        </div>
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>Impact tracking</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-image feature-image-3"></div>
+                <div class="feature-content">
+                    <span class="feature-badge">Technology</span>
+                    <h3>Smart Notifications</h3>
+                    <p>Stay informed with instant push notifications for new donations, request updates, and important messages. Never miss an opportunity to help or receive help.</p>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>Instant alerts</span>
+                        </div>
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>24/7 updates</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-image feature-image-4"></div>
+                <div class="feature-content">
+                    <span class="feature-badge">Security</span>
+                    <h3>Verified & Safe</h3>
+                    <p>Your safety is our priority. All users are verified, and our platform uses bank-level encryption to protect your personal information and transactions.</p>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>User verification</span>
+                        </div>
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>Data encryption</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-image feature-image-5"></div>
+                <div class="feature-content">
+                    <span class="feature-badge">Accessibility</span>
+                    <h3>Always Available</h3>
+                    <p>Access KindPlate from any device - desktop, tablet, or smartphone. Our responsive design ensures a seamless experience wherever you are.</p>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>Cross-platform</span>
+                        </div>
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>Mobile optimized</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-image feature-image-6"></div>
+                <div class="feature-content">
+                    <span class="feature-badge">Community</span>
+                    <h3>Growing Network</h3>
+                    <p>Be part of a compassionate community of donors and receivers working together to end hunger and reduce waste in your neighborhood.</p>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>500+ members</span>
+                        </div>
+                        <div class="feature-stat">
+                            <span class="feature-stat-icon">✓</span>
+                            <span>50+ cities</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-item">
+                <h2>1000+</h2>
+                <p>Meals Donated</p>
+            </div>
+            <div class="stat-item">
+                <h2>500+</h2>
+                <p>Active Members</p>
+            </div>
+            <div class="stat-item">
+                <h2>50+</h2>
+                <p>Communities Served</p>
+            </div>
+            <div class="stat-item">
+                <h2>95%</h2>
+                <p>Satisfaction Rate</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+        <h2>How It Works</h2>
+        <p style="text-align: center; color: var(--text-secondary); max-width: 600px; margin: 0 auto 3rem;">Four simple steps to start making a difference in your community</p>
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-image step-image-1"></div>
+                <h3>Create Account</h3>
+                <p>Sign up as a Donor or Receiver in less than a minute.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-image step-image-2"></div>
+                <h3>Post or Browse</h3>
+                <p>Donors post available food, receivers browse listings.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-image step-image-3"></div>
+                <h3>Connect</h3>
+                <p>Receivers request donations, donors approve requests.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-image step-image-4"></div>
+                <h3>Complete</h3>
+                <p>Coordinate pickup and complete the donation.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="impact-section">
+        <div class="impact-container">
+            <div class="impact-content">
+                <h2>Making Real Impact</h2>
+                <p>Every day, millions of pounds of food go to waste while many struggle with hunger. KindPlate bridges this gap by connecting those who have surplus food with those who need it most.</p>
+                <p>Join us in creating a world where no food goes to waste and no one goes hungry.</p>
+                <a href="{% url 'register' %}" class="btn btn-primary" style="margin-top: 1rem; font-size: 1rem; padding: 0.9rem 1.8rem;">Join KindPlate</a>
+            </div>
+            <div class="impact-image"></div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Ready to Make a Difference?</h2>
+        <p>Join our community today</p>
+        <div class="cta-buttons">
+            <a href="{% url 'register' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">Get Started</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <!-- About Section -->
+                <div class="footer-section">
+                    <h3>KindPlate</h3>
+                    <p>Connecting communities to reduce food waste and fight hunger.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link">Facebook</a>
+                        <a href="#" class="social-link">Twitter</a>
+                        <a href="#" class="social-link">Instagram</a>
+                        <a href="#" class="social-link">LinkedIn</a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Platform</h3>
+                    <ul class="footer-links-list">
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="{% url 'register' %}">Get Started</a></li>
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul class="footer-links-list">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Safety</a></li>
+                        <li><a href="#">Guidelines</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>support@kindplate.com</p>
+                    <p>+1 (555) 123-4567</p>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <p>© 2026 KindPlate. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="scroll-to-top" id="scrollToTop">
+        ↑
+    </div>
+
+    <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

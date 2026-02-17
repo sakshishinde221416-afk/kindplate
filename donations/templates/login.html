@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - KindPlate</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo-section">
+            <span class="logo">KP</span>
+            <span class="logo-text">KindPlate</span>
+        </div>
+        <div class="nav-buttons">
+            <button id="themeToggle" class="theme-toggle">🌙</button>
+            <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-image">
+                <div class="auth-image-overlay">
+                    <h3>Welcome Back!</h3>
+                    <p>Continue your journey in making a positive impact on your community through food sharing.</p>
+                </div>
+            </div>
+            
+            <div class="auth-form-container">
+                <div class="card">
+                    <h2>Welcome Back</h2>
+                    <p class="card-subtitle">Login to continue making a difference</p>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="your.email@example.com" required autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                        <button type="submit" class="btn-submit">Login</button>
+                        
+                        <div class="form-features">
+                            <div class="form-feature">
+                                <span class="form-feature-icon">✓</span>
+                                <span>Secure login</span>
+                            </div>
+                            <div class="form-feature">
+                                <span class="form-feature-icon">✓</span>
+                                <span>Data protected</span>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center">
+                        <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <div class="footer-bottom-left">
+                    <span class="footer-logo">🍽️</span>
+                    <p>© 2026 KindPlate. Making a difference together.</p>
+                </div>
+                <div class="footer-bottom-links">
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/theme.js' %}"></script>
+</body>
+</html>
