@@ -143,8 +143,13 @@ def receiver_dashboard(request):
     
     requested_donation_ids = my_requests.values_list('donation_id', flat=True)
     
-    # Only show unread notifications (newly approved/rejected)
-    notifications = my_requests.exclude(status='pending').filter(is_read=False)
+    # Show rejected notifications always (even if read) + unread approved notifications
+    rejected_notifications = my_requests.filter(status='rejected').select_related('donation')
+    unread_approved_notifications = my_requests.filter(status='approved', is_read=False).select_related('donation')
+    
+    # Combine both querysets for notifications
+    from itertools import chain
+    notifications = list(chain(rejected_notifications, unread_approved_notifications))
     
     # Get approved requests to show contact info
     approved_requests = my_requests.filter(status='approved').select_related('donation__donor')
@@ -153,7 +158,7 @@ def receiver_dashboard(request):
         'donations': donations,
         'requested_donation_ids': list(requested_donation_ids),
         'notifications': notifications,
-        'notifications_count': notifications.count(),
+        'notifications_count': len(notifications),
         'approved_requests': approved_requests,
         'search_query': search_query,
         'category_filter': category_filter,
@@ -276,7 +281,10 @@ def mark_notifications_read(request):
     if request.user.role != 'receiver':
         return JsonResponse({'success': False, 'message': 'Invalid request'})
     
-    # Mark all notifications as read
-    Request.objects.filter(receiver=request.user, is_read=False).update(is_read=True)
+    # Mark only approved notifications as read (keep rejected visible)
+    Request.objects.filter(receiver=request.user, status='approved', is_read=False).update(is_read=True)
     
-    return JsonResponse({'success': True, 'message': 'Notifications marked as read'})
+    # Count remaining unread notifications (only approved ones now)
+    unread_count = Request.objects.filter(receiver=request.user, status='approved', is_read=False).count()
+    
+    return JsonResponse({'success': True, 'message': 'Notifications marked as read', 'unread_count': unread_count})

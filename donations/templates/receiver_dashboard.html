@@ -290,11 +290,14 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Update badge to 0
+                    // Update badge with remaining unread count
                     const badges = document.querySelectorAll('.notification-badge');
                     badges.forEach(badge => {
-                        badge.textContent = '0';
-                        badge.style.display = 'none';
+                        if (data.unread_count > 0) {
+                            badge.textContent = data.unread_count;
+                        } else {
+                            badge.style.display = 'none';
+                        }
                     });
                 }
             })
