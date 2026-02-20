@@ -1,8 +1,6 @@
-// Theme toggle functionality
 const themeToggle = document.getElementById('themeToggle');
 const htmlElement = document.documentElement;
 
-// Load saved theme or default to light
 const currentTheme = localStorage.getItem('theme') || 'light';
 htmlElement.setAttribute('data-theme', currentTheme);
 updateThemeIcon(currentTheme);

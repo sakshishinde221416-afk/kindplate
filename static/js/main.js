@@ -1,4 +1,3 @@
-// Scroll to top button
 const scrollToTopBtn = document.getElementById('scrollToTop');
 
 if (scrollToTopBtn) {
@@ -18,7 +17,6 @@ if (scrollToTopBtn) {
     });
 }
 
-// Animate elements on scroll
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
@@ -33,7 +31,6 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe all cards
 document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.feature-card, .step-card, .testimonial-card');
     cards.forEach(card => {
@@ -44,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
