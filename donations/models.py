@@ -1,17 +1,5 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-class CustomUser(AbstractUser):
-    ROLE_CHOICES = [
-        ('donor', 'Donor'),
-        ('receiver', 'Receiver'),
-    ]
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
-    full_name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=20, blank=True, null=True)
-    
-    def __str__(self):
-        return f"{self.full_name} ({self.role})"
+from django.conf import settings
 
 class Donation(models.Model):
     CATEGORY_CHOICES = [
@@ -25,11 +13,15 @@ class Donation(models.Model):
         ('other', 'Other'),
     ]
     
-    donor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='donations')
+    donor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='donations')
     food_title = models.CharField(max_length=255)
     description = models.TextField()
     quantity = models.CharField(max_length=100)
     pickup_location = models.CharField(max_length=500)
+    
+    pickup_latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    pickup_longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    
     expiry_date = models.DateField()
     food_image = models.ImageField(upload_to='donation_images/', null=True, blank=True)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='other')
@@ -42,6 +34,12 @@ class Donation(models.Model):
     
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['pickup_latitude', 'pickup_longitude']),
+            models.Index(fields=['category']),
+            models.Index(fields=['expiry_date']),
+        ]
+
 
 class Request(models.Model):
     STATUS_CHOICES = [
@@ -50,7 +48,7 @@ class Request(models.Model):
         ('rejected', 'Rejected'),
     ]
     donation = models.ForeignKey(Donation, on_delete=models.CASCADE, related_name='requests')
-    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='requests')
+    receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requests')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     is_read = models.BooleanField(default=False)
     notes = models.TextField(blank=True, null=True)

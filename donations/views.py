@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db import models
-from .models import CustomUser, Donation, Request
+from users.models import CustomUser
+from .models import Donation, Request
 import json
 
 def home(request):
@@ -50,10 +51,16 @@ def login_view(request):
         
         if user is not None:
             login(request, user)
-            if user.role == 'donor':
+            if user.role.startswith('donor'):
+                return redirect('donor_dashboard')
+            elif user.role.startswith('receiver'):
+                return redirect('receiver_dashboard')
+            elif user.role == 'volunteer':
+                return redirect('donor_dashboard')
+            elif user.role == 'corporate':
                 return redirect('donor_dashboard')
             else:
-                return redirect('receiver_dashboard')
+                return redirect('donor_dashboard')
         else:
             messages.error(request, 'Invalid email or password')
     
@@ -66,7 +73,7 @@ def logout_view(request):
 
 @login_required
 def donor_dashboard(request):
-    if request.user.role != 'donor':
+    if not request.user.role.startswith('donor'):
         return redirect('receiver_dashboard')
     
     donations = Donation.objects.filter(donor=request.user)
@@ -84,7 +91,7 @@ def donor_dashboard(request):
 
 @login_required
 def add_donation(request):
-    if request.user.role != 'donor':
+    if not request.user.role.startswith('donor'):
         return redirect('receiver_dashboard')
     
     if request.method == 'POST':
@@ -107,7 +114,7 @@ def add_donation(request):
 
 @login_required
 def receiver_dashboard(request):
-    if request.user.role != 'receiver':
+    if not request.user.role.startswith('receiver'):
         return redirect('donor_dashboard')
     
     donations = Donation.objects.all().select_related('donor')
@@ -170,7 +177,7 @@ def receiver_dashboard(request):
 @login_required
 @require_POST
 def request_donation(request, donation_id):
-    if request.user.role != 'receiver':
+    if not request.user.role.startswith('receiver'):
         return JsonResponse({'success': False, 'message': 'Only receivers can request donations'})
     
     donation = get_object_or_404(Donation, id=donation_id)
@@ -192,7 +199,7 @@ def request_donation(request, donation_id):
 @login_required
 @require_POST
 def update_request_status(request, request_id):
-    if request.user.role != 'donor':
+    if not request.user.role.startswith('donor'):
         return JsonResponse({'success': False, 'message': 'Only donors can update request status'})
     
     request_obj = get_object_or_404(Request, id=request_id, donation__donor=request.user)
@@ -209,7 +216,7 @@ def update_request_status(request, request_id):
 
 @login_required
 def get_notifications(request):
-    if request.user.role == 'donor':
+    if request.user.role.startswith('donor'):
         notifications = Request.objects.filter(
             donation__donor=request.user,
             status='pending'
@@ -239,7 +246,7 @@ def get_notifications(request):
 
 @login_required
 def edit_donation(request, donation_id):
-    if request.user.role != 'donor':
+    if not request.user.role.startswith('donor'):
         return redirect('receiver_dashboard')
     
     donation = get_object_or_404(Donation, id=donation_id, donor=request.user)
@@ -267,7 +274,7 @@ def edit_donation(request, donation_id):
 @login_required
 @require_POST
 def delete_donation(request, donation_id):
-    if request.user.role != 'donor':
+    if not request.user.role.startswith('donor'):
         return JsonResponse({'success': False, 'message': 'Only donors can delete donations'})
     
     donation = get_object_or_404(Donation, id=donation_id, donor=request.user)
@@ -278,7 +285,7 @@ def delete_donation(request, donation_id):
 @login_required
 @require_POST
 def mark_notifications_read(request):
-    if request.user.role != 'receiver':
+    if not request.user.role.startswith('receiver'):
         return JsonResponse({'success': False, 'message': 'Invalid request'})
     
     # Mark only approved notifications as read (keep rejected visible)
